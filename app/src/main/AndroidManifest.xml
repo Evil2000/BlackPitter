@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="de.evil2000.blackpitter">
+
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <!--
+    NOTE!
+    When the app is installed on the device, android sets it to an "Application STOPPED STATE" which
+    means the app must be started once before it can receive any broadcasts.
+    This is a "service only" app. It has no activity. Therefore the user has no ability to start the
+    app once so that android removes the STOPPED STATE. To get around this, you can start the app by
+    using the commandline (as root):
+    # am startservice -a de.evil2000.blackpitter.StartService de.evil2000.blackpitter
+    After this "first run" the app receives the broadcasts and is started after boot.
+    -->
+    <application
+        android:icon="@android:drawable/stat_sys_download"
+        android:label="@string/app_name">
+        <service android:name=".SearchAndDownload">
+            <intent-filter>
+                <action android:name="de.evil2000.blackpitter.StartService" />
+            </intent-filter>
+        </service>
+
+        <receiver
+            android:name=".StarterReceiver"
+            android:enabled="true"
+            android:exported="true"
+            android:permission="android.permission.RECEIVE_BOOT_COMPLETED">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.USER_PRESENT" />
+            </intent-filter>
+        </receiver>
+    </application>
+
+</manifest>
